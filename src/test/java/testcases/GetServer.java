@@ -15,7 +15,7 @@ public class GetServer {
 		driver.get("https://secure.ebillity.com/web/session/new");
 		driver.manage().window().maximize();
 		//INPUTS
-		String email = "ebillitysage50feb14@mailinator.com";
+		String email = "jayaar@mailinator.com";
 		String pword = "Test123";
 		String expServer= "Server 13V";
 		

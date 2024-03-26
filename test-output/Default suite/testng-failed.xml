@@ -6,11 +6,7 @@
       <class name="testcases.SmokeTestMain">
         <methods>
           <include name="noLogin"/>
-          <include name="manageMyEntries"/>
-          <include name="invoice"/>
-          <include name="client"/>
-          <include name="MTE"/>
-          <include name="project"/>
+          <include name="expense"/>
         </methods>
       </class> <!-- testcases.SmokeTestMain -->
     </classes>

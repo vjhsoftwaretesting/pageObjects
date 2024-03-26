@@ -3,7 +3,7 @@ package pageObjects_Classes;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
-public class ProjectsPage {
+public class ProjectsPageObjs {
 	
 	@FindBy(id="mnu_project-home")
 	public  static WebElement projectModule;

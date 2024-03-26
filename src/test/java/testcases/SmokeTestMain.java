@@ -20,28 +20,35 @@ import pageObjects_Classes.InvoicePageObjs;
 import pageObjects_Classes.LoginPageObjs;
 import pageObjects_Classes.MTEWindowObjs;
 import pageObjects_Classes.ManageMyEntriesPageObjs;
-import pageObjects_Classes.ProjectsPage;
+import pageObjects_Classes.ProjectsPageObjs;
 
 
 public class SmokeTestMain {
 	//client
 	String fName = "client"; //1
-	String lName = "0006"; //2
+	String lName = "0009"; //2
 	//project
 	String cliName = String.join(" ", fName,lName);
-	String proName = "pro 006"; //3
+	String proName = "pro 009"; //3
 	//activity
 	String activity = "Review";  //4
 	//Date
-	String date="20/03/2024";  //5
-	String fromTime = "10:00 AM";  //6
-	String toTime = "11:00 AM";  //7
+	String date="20/03/2019";  //5
+	String fromTime = "10:20 AM";  //6
+	String toTime = "11:40 AM";  //7
 	String[] dat = date.split("/");
 	String day = dat[0];
 	String month = dat[1];
 	String year = dat[2];
+	int yy = Integer.parseInt(year);
 	String desc = cliName+proName+fromTime+toTime+"-TE created with Selenium";
 	static String cpyDate;
+	//expese
+	String expType = "Copying";
+	String cost = "500";
+	String qty = "3";
+	String mark = "3";
+	
 WebDriver driver;
 	
 	@BeforeTest
@@ -66,7 +73,7 @@ WebDriver driver;
 		LoginPageObjs.submitButton.click();
 	}
 	
-	@Test(enabled=true, priority=0)
+	@Test(enabled=false, priority=0)
 	public void client() throws InterruptedException {	
 		PageFactory.initElements(driver, ClientPageObjs.class);
 		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
@@ -82,18 +89,18 @@ WebDriver driver;
 		Assert.assertEquals(actBannerMsg, expBannerMsg);
 	}
 	
-	@Test(enabled=true, priority=1)
+	@Test(enabled=false, priority=1)
 	public void project(){
-		PageFactory.initElements(driver, ProjectsPage.class);
-		ProjectsPage.projectModule.click();
-		ProjectsPage.addProject.click();
-		ProjectsPage.clientDD.click();
-		ProjectsPage.clientSearchField.sendKeys(cliName);
+		PageFactory.initElements(driver, ProjectsPageObjs.class);
+		ProjectsPageObjs.projectModule.click();
+		ProjectsPageObjs.addProject.click();
+		ProjectsPageObjs.clientDD.click();
+		ProjectsPageObjs.clientSearchField.sendKeys(cliName);
 		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(8));
 		wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@class='select2-results']/ul/li[contains(text(),'"+cliName+"')]")));
 		driver.findElement(By.xpath("//*[@class='select2-results']/ul/li[contains(text(),'"+cliName+"')]")).click();
-		ProjectsPage.projectNameFiled.sendKeys(proName);
-		ProjectsPage.saveCloseProject.click();
+		ProjectsPageObjs.projectNameFiled.sendKeys(proName);
+		ProjectsPageObjs.saveCloseProject.click();
 		String expBannerMsg = "Project saved successfully";
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='messageContent']")));
 		String actBannerMsg = driver.findElement(By.xpath("//*[@id='messageContent']")).getText();
@@ -101,7 +108,7 @@ WebDriver driver;
 		Assert.assertEquals(actBannerMsg, expBannerMsg);
 	}
 	
-	@Test(enabled=true, priority=2)
+	@Test(enabled=false, priority=2)
 	public void MTE() throws InterruptedException {
 		
 		PageFactory.initElements(driver, MTEWindowObjs.class);
@@ -131,7 +138,6 @@ WebDriver driver;
 		while(true) {
 			String yearHeader = driver.findElement(By.xpath("//*[@class='switch'][not(contains(text(),'-'))][not(contains(text(),' '))]")).getText();
 			int y = Integer.parseInt(yearHeader);
-			int yy = Integer.parseInt(year);
 			if (y==yy) {
 				break;
 			}				
@@ -167,6 +173,67 @@ WebDriver driver;
 	}
 	
 	@Test(enabled=true, priority=3)
+	public void expense() throws InterruptedException {
+		PageFactory.initElements(driver, ManageMyEntriesPageObjs.class);
+		PageFactory.initElements(driver, HomePageObjs.class);
+		HomePageObjs.manageMyEntriesButton.click();
+		String oldWindow =driver.getWindowHandle();
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(8));
+		ManageMyEntriesPageObjs.expenseTab.click();
+		wait.until(ExpectedConditions.visibilityOf(ManageMyEntriesPageObjs.addExpenseButton));
+		ManageMyEntriesPageObjs.addExpenseButton.click();
+		Set<String> newWindow = driver.getWindowHandles();  
+		  for (String newwindow : newWindow) { driver.switchTo().window(newwindow); } 
+		wait.until(ExpectedConditions.visibilityOf(ManageMyEntriesPageObjs.expCliDD));
+		ManageMyEntriesPageObjs.expCliDD.click();
+		driver.switchTo().activeElement().sendKeys(Keys.DELETE+cliName+Keys.ENTER);
+		Thread.sleep(1500);
+		ManageMyEntriesPageObjs.expProDD.click();
+		driver.switchTo().activeElement().sendKeys(Keys.DELETE+proName+Keys.ENTER);
+		Thread.sleep(1000);
+		ManageMyEntriesPageObjs.expTypeDD.click();
+		driver.switchTo().activeElement().sendKeys(Keys.DELETE+expType+Keys.ENTER);
+		Thread.sleep(1000);
+		ManageMyEntriesPageObjs.expDesField.sendKeys(desc);
+		ManageMyEntriesPageObjs.expCostField.clear();
+		ManageMyEntriesPageObjs.expCostField.sendKeys(cost);
+		ManageMyEntriesPageObjs.expQtyField.sendKeys(qty);
+		ManageMyEntriesPageObjs.expMarkUpField.sendKeys(mark);
+		//date
+		driver.findElement(By.xpath("//*[@class='calendarImageButton']")).click();
+		driver.findElement(By.xpath("//*[@class='ajax__calendar_title']")).click();
+		while(true) {
+			String expYear = driver.findElement(By.xpath("//*[@class='ajax__calendar_title']")).getText();
+			int y = Integer.parseInt(expYear);
+			if(y==yy) {
+				break;
+			}
+			else if(y>yy) {
+				driver.findElement(By.xpath("//*[@class='ajax__calendar_prev']")).click();
+			}
+			else if(y<yy) {
+				driver.findElement(By.xpath("//*[@class='ajax__calendar_next']")).click();
+			}
+		}
+		Thread.sleep(500);
+		if(month.equals("01")) {driver.findElement(By.xpath("//*[@class='ajax__calendar_month'][contains(text(),'Jan')]")).click();}
+		else if(month.equals("02")) {driver.findElement(By.xpath("//*[@class='ajax__calendar_month'][contains(text(),'Feb')]")).click();}
+		else if(month.equals("03")) {driver.findElement(By.xpath("//*[@class='ajax__calendar_month'][contains(text(),'Mar')]")).click();}
+		else if(month.equals("04")) {driver.findElement(By.xpath("//*[@class='ajax__calendar_month'][contains(text(),'Apr')]")).click();}
+		else if(month.equals("05")) {driver.findElement(By.xpath("//*[@class='ajax__calendar_month'][contains(text(),'May')]")).click();}
+		else if(month.equals("06")) {driver.findElement(By.xpath("//*[@class='ajax__calendar_month'][contains(text(),'Jun')]")).click();}
+		else if(month.equals("07")) {driver.findElement(By.xpath("//*[@class='ajax__calendar_month'][contains(text(),'Jul')]")).click();}
+		else if(month.equals("08")) {driver.findElement(By.xpath("//*[@class='ajax__calendar_month'][contains(text(),'Aug')]")).click();}
+		else if(month.equals("09")) {driver.findElement(By.xpath("//*[@class='ajax__calendar_month'][contains(text(),'Sep')]")).click();}
+		else if(month.equals("10")) {driver.findElement(By.xpath("//*[@class='ajax__calendar_month'][contains(text(),'Oct')]")).click();}
+		else if(month.equals("11")) {driver.findElement(By.xpath("//*[@class='ajax__calendar_month'][contains(text(),'Nov')]")).click();}
+		else if(month.equals("12")) {driver.findElement(By.xpath("//*[@class='ajax__calendar_month'][contains(text(),'Dec')]")).click();}
+		Thread.sleep(500);	
+		driver.findElement(By.xpath("//*[@class='ajax__calendar_day'][contains(text(),'"+day+"')]")).click();
+		ManageMyEntriesPageObjs.saveButton.click();		
+	}
+	
+	@Test(enabled=false, priority=4)
 	public void manageMyEntries() throws InterruptedException {
 		PageFactory.initElements(driver, ManageMyEntriesPageObjs.class);
 		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(8));
@@ -191,14 +258,15 @@ WebDriver driver;
 		ManageMyEntriesPageObjs.toDateFilter.sendKeys(cpyDate);
 		Thread.sleep(800);
 		ManageMyEntriesPageObjs.searchFilterButton.click();
-		Thread.sleep(800);
 		//entry checkbox
+		wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id='tr_0']/following::td/span[contains(text(),'"+cpyDate+"')]/following::td/span[contains(text(),'"+desc+"')]/parent::td/preceding-sibling::td/input")));
 		driver.findElement(By.xpath("//*[@id='tr_0']/following::td/span[contains(text(),'"+cpyDate+"')]/following::td/span[contains(text(),'"+desc+"')]/parent::td/preceding-sibling::td/input")).click();
 		ManageMyEntriesPageObjs.submitButton.click();
-		ManageMyEntriesPageObjs.submittedFilter.click();
-		Thread.sleep(1000);		
+		ManageMyEntriesPageObjs.submittedFilter.click();	
 		//entry inline arrow
-		driver.findElement(By.xpath("//*[@id='tr_0']/following::td/span[contains(text(),'"+cpyDate+"')]/following::td/span[contains(text(),'"+desc+"')]/parent::td/following-sibling::td[5]")).click();
+		Thread.sleep(1500);
+		driver.findElement(By.xpath("//*[@id='tr_0']/following::td/span[contains(text(),'"+cpyDate+"')]/following::td/span[contains(text(),'"+desc+"')]/parent::td/following-sibling::td[@class=' details-control pointer']")).click();
+		wait.until(ExpectedConditions.elementToBeClickable(ManageMyEntriesPageObjs.inlineApproveButton));
 		ManageMyEntriesPageObjs.inlineApproveButton.click();
 		String expBannerMsg = "Approved Successfully";
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='messageContent'][contains(text(),'Approved Successfully')]")));
@@ -207,7 +275,7 @@ WebDriver driver;
 		Assert.assertEquals(actBannerMsg, expBannerMsg);
 	}
 	
-	@Test(enabled=true, priority=4)
+	@Test(enabled=false, priority=5)
 	public void invoice() throws InterruptedException {
 		PageFactory.initElements(driver, HomePageObjs.class);
 		PageFactory.initElements(driver, InvoicePageObjs.class);
