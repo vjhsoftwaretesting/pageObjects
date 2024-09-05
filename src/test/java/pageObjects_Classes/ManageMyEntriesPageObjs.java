@@ -6,7 +6,7 @@ import org.openqa.selenium.support.FindBy;
 public class ManageMyEntriesPageObjs {
 	
 	@FindBy(id="find")
-	public static WebElement fingButton;
+	public static WebElement findButton;
 	
 	@FindBy(xpath="//*[@id='clientsFilterDiv']/descendant::select[@id='ddlClients_tmExpense']/following::span[5]")
 	public static WebElement clientFilter;
@@ -79,38 +79,31 @@ public class ManageMyEntriesPageObjs {
 	@FindBy (xpath="//a[@onclick='showAddExpenseEntry();']")
 	public static WebElement addExpenseButton;
 	
-	@FindBy (id="ctl00_ContentPlaceHolder1_ClientDropDownList_Input")
-	public static WebElement expCliDD;
+	@FindBy (xpath ="(//span[@class='select2-selection__rendered'])[5]")
+	public static WebElement expClientFilter;
 	
-	@FindBy (id="ctl00_ContentPlaceHolder1_ProjectDropDownList_Input")
-	public static WebElement expProDD;
+	@FindBy (xpath ="(//span[@class='select2-selection__rendered'])[6]")
+	public static WebElement expProjectFilter;
 	
-	@FindBy (id="ctl00_ContentPlaceHolder1_ExpenseTypeDropDownList_Input")
-	public static WebElement expTypeDD;
+	@FindBy (xpath ="(//span[@class='select2-selection__rendered'])[7]")
+	public static WebElement expActivityFilter;
 	
-	@FindBy (id="ctl00_ContentPlaceHolder1_descTextBox_textBoxValue")
-	public static WebElement expDesField;
+	@FindBy (id ="txtFrom_DateRangeExp")
+	public static WebElement expFromDateFilter;
 	
-	@FindBy (id="ctl00_ContentPlaceHolder1_costTextBox")
-	public static WebElement expCostField;
+	@FindBy (id ="txtTo_DateRangeExp")
+	public static WebElement expToDateFilter;
 	
-	@FindBy (id="ctl00_ContentPlaceHolder1_qtyTextBox")
-	public static WebElement expQtyField;
+	@FindBy(xpath="//*[@id='select2-ddlExpClients_tmExpense-results']/li[1]")
+	public static WebElement expCliSearchResult;
 	
-	@FindBy (id="ctl00_ContentPlaceHolder1_markupRatioTextBox")
-	public static WebElement expMarkUpField;
+	@FindBy(xpath="//*[@id='select2-ddlExpProjects_tmExpense-results']/li[1]")
+	public static WebElement expProSearchResult;
 	
-	@FindBy (id="ctl00_ContentPlaceHolder1_reimburseCheckBox")
-	public static WebElement expReimbureCheckbox;
+	@FindBy(xpath="//*[@id='select2-ddlExpenseType_tmExp-results']/li[1]")
+	public static WebElement expActSearchResult;
 	
-	@FindBy (id="ctl00_ContentPlaceHolder1_taxableCheckbox")
-	public static WebElement expTaxCheckbox;
-	
-	@FindBy (xpath="//button[@title='Choose File']")
-	public static WebElement expChooseFileButton;
-	
-	@FindBy (xpath="//input[@title='Save Expense']")
-	public static WebElement saveButton;
-
+	@FindBy(xpath="(//*[@id='grdMyEntries_Search'])[2]")
+	public static WebElement expSearchFilterButton;
 
 }

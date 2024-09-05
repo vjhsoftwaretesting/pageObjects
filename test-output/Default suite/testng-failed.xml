@@ -3,12 +3,11 @@
 <suite name="Failed suite [Default suite]" guice-stage="DEVELOPMENT">
   <test thread-count="5" name="Default test(failed)">
     <classes>
-      <class name="testcases.SmokeTestMain">
+      <class name="testcases.Get_AllServers">
         <methods>
-          <include name="noLogin"/>
-          <include name="expense"/>
+          <include name="noLogin" invocation-numbers="0 1 2 3 6"/>
         </methods>
-      </class> <!-- testcases.SmokeTestMain -->
+      </class> <!-- testcases.Get_AllServers -->
     </classes>
   </test> <!-- Default test(failed) -->
 </suite> <!-- Failed suite [Default suite] -->

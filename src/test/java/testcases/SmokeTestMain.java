@@ -21,15 +21,16 @@ import pageObjects_Classes.LoginPageObjs;
 import pageObjects_Classes.MTEWindowObjs;
 import pageObjects_Classes.ManageMyEntriesPageObjs;
 import pageObjects_Classes.ProjectsPageObjs;
+import pageObjects_Classes.SEEWindowObjs;
 
 
 public class SmokeTestMain {
 	//client
 	String fName = "client"; //1
-	String lName = "0009"; //2
+	String lName = "0001"; //2
 	//project
 	String cliName = String.join(" ", fName,lName);
-	String proName = "pro 009"; //3
+	String proName = "pro 001"; //3
 	//activity
 	String activity = "Review";  //4
 	//Date
@@ -41,13 +42,14 @@ public class SmokeTestMain {
 	String month = dat[1];
 	String year = dat[2];
 	int yy = Integer.parseInt(year);
-	String desc = cliName+proName+fromTime+toTime+"-TE created with Selenium";
+	String descTime = cliName+proName+fromTime+toTime+"-TE created with Selenium";
 	static String cpyDate;
 	//expese
 	String expType = "Copying";
 	String cost = "500";
 	String qty = "3";
 	String mark = "3";
+	String descExp = cliName+proName+expType+"-EE created with Selenium";
 	
 WebDriver driver;
 	
@@ -57,7 +59,7 @@ WebDriver driver;
 		driver.get("https://secure.ebillity.com/web/session/new");
 		driver.manage().window().maximize();
 		
-		String email = "ebillitysage50feb14@mailinator.com";
+		String email = "schedule@mailinator.com";//"ebillitysage50feb14@mailinator.com" / vpcxavier@mailinator.com - Test1234
 		String pword = "Test123";
 		//String expServer= "Server 8V";
 		
@@ -108,7 +110,7 @@ WebDriver driver;
 		Assert.assertEquals(actBannerMsg, expBannerMsg);
 	}
 	
-	@Test(enabled=false, priority=2)
+	@Test(enabled=true, priority=2)
 	public void MTE() throws InterruptedException {
 		
 		PageFactory.initElements(driver, MTEWindowObjs.class);
@@ -130,7 +132,7 @@ WebDriver driver;
 		Thread.sleep(500);
 		MTEWindowObjs.activitySearchBox.sendKeys(Keys.BACK_SPACE);
 		MTEWindowObjs.activitySearchBox.sendKeys(Keys.ENTER);
-		MTEWindowObjs.descriptionBox.sendKeys(desc);     
+		MTEWindowObjs.descriptionBox.sendKeys(descTime);     
 		//Date
 		MTEWindowObjs.datePicker.click();
 		MTEWindowObjs.dateHeader.click();
@@ -172,10 +174,54 @@ WebDriver driver;
 		driver.switchTo().window(oldWindow);
 	}
 	
+	
 	@Test(enabled=true, priority=3)
+	public void manageMyEntries() throws InterruptedException {
+		PageFactory.initElements(driver, ManageMyEntriesPageObjs.class);
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(8));
+		ManageMyEntriesPageObjs.findButton.click();
+		Thread.sleep(1000);
+		ManageMyEntriesPageObjs.clientFilter.click();
+		ManageMyEntriesPageObjs.searchField.sendKeys(cliName);
+		Thread.sleep(800);
+		ManageMyEntriesPageObjs.cliSearchResult.click();
+		ManageMyEntriesPageObjs.projectFilter.click();
+		ManageMyEntriesPageObjs.searchField.sendKeys(proName);
+		Thread.sleep(800);
+		ManageMyEntriesPageObjs.proSearchResult.click();
+		ManageMyEntriesPageObjs.activityFilter.click();
+		ManageMyEntriesPageObjs.searchField.sendKeys(activity);
+		Thread.sleep(800);
+		ManageMyEntriesPageObjs.actSearchResult.click();
+		ManageMyEntriesPageObjs.fromDateFilter.clear();
+		ManageMyEntriesPageObjs.fromDateFilter.sendKeys(cpyDate);
+		Thread.sleep(800);
+		ManageMyEntriesPageObjs.toDateFilter.clear();
+		ManageMyEntriesPageObjs.toDateFilter.sendKeys(cpyDate);
+		Thread.sleep(800);
+		ManageMyEntriesPageObjs.searchFilterButton.click();
+		//entry checkbox
+		wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id='tr_0']/following::td/span[contains(text(),'"+cpyDate+"')]/following::td/span[contains(text(),'"+descTime+"')]/parent::td/preceding-sibling::td/input")));
+		driver.findElement(By.xpath("//*[@id='tr_0']/following::td/span[contains(text(),'"+cpyDate+"')]/following::td/span[contains(text(),'"+descTime+"')]/parent::td/preceding-sibling::td/input")).click();
+		ManageMyEntriesPageObjs.submitButton.click();
+		ManageMyEntriesPageObjs.submittedFilter.click();	
+		//entry inline arrow
+		Thread.sleep(1500);
+		driver.findElement(By.xpath("//*[@id='tr_0']/following::td/span[contains(text(),'"+cpyDate+"')]/following::td/span[contains(text(),'"+descTime+"')]/parent::td/following-sibling::td[@class=' details-control pointer']")).click();
+		wait.until(ExpectedConditions.elementToBeClickable(ManageMyEntriesPageObjs.inlineApproveButton));
+		ManageMyEntriesPageObjs.inlineApproveButton.click();
+		String expBannerMsg = "Approved Successfully";
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='messageContent'][contains(text(),'Approved Successfully')]")));
+		String actBannerMsg = driver.findElement(By.xpath("//*[@id='messageContent']")).getText();
+		System.out.println("Time Entry: "+actBannerMsg);
+		Assert.assertEquals(actBannerMsg, expBannerMsg);
+	}
+	
+	@Test(enabled=true, priority=4)
 	public void expense() throws InterruptedException {
 		PageFactory.initElements(driver, ManageMyEntriesPageObjs.class);
 		PageFactory.initElements(driver, HomePageObjs.class);
+		PageFactory.initElements(driver, SEEWindowObjs.class);
 		HomePageObjs.manageMyEntriesButton.click();
 		String oldWindow =driver.getWindowHandle();
 		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(8));
@@ -184,21 +230,22 @@ WebDriver driver;
 		ManageMyEntriesPageObjs.addExpenseButton.click();
 		Set<String> newWindow = driver.getWindowHandles();  
 		  for (String newwindow : newWindow) { driver.switchTo().window(newwindow); } 
-		wait.until(ExpectedConditions.visibilityOf(ManageMyEntriesPageObjs.expCliDD));
-		ManageMyEntriesPageObjs.expCliDD.click();
+		wait.until(ExpectedConditions.visibilityOf(SEEWindowObjs.expCliDD));
+		SEEWindowObjs.expCliDD.click();
 		driver.switchTo().activeElement().sendKeys(Keys.DELETE+cliName+Keys.ENTER);
 		Thread.sleep(1500);
-		ManageMyEntriesPageObjs.expProDD.click();
+		SEEWindowObjs.expProDD.click();
 		driver.switchTo().activeElement().sendKeys(Keys.DELETE+proName+Keys.ENTER);
 		Thread.sleep(1000);
-		ManageMyEntriesPageObjs.expTypeDD.click();
+		SEEWindowObjs.expTypeDD.click();
 		driver.switchTo().activeElement().sendKeys(Keys.DELETE+expType+Keys.ENTER);
 		Thread.sleep(1000);
-		ManageMyEntriesPageObjs.expDesField.sendKeys(desc);
-		ManageMyEntriesPageObjs.expCostField.clear();
-		ManageMyEntriesPageObjs.expCostField.sendKeys(cost);
-		ManageMyEntriesPageObjs.expQtyField.sendKeys(qty);
-		ManageMyEntriesPageObjs.expMarkUpField.sendKeys(mark);
+		SEEWindowObjs.expDesField.sendKeys(descExp);
+		SEEWindowObjs.expCostField.clear();
+		SEEWindowObjs.expCostField.sendKeys(cost);
+		SEEWindowObjs.expQtyField.clear();;
+		SEEWindowObjs.expQtyField.sendKeys(qty);
+		SEEWindowObjs.expMarkUpField.sendKeys(mark);
 		//date
 		driver.findElement(By.xpath("//*[@class='calendarImageButton']")).click();
 		driver.findElement(By.xpath("//*[@class='ajax__calendar_title']")).click();
@@ -230,52 +277,56 @@ WebDriver driver;
 		else if(month.equals("12")) {driver.findElement(By.xpath("//*[@class='ajax__calendar_month'][contains(text(),'Dec')]")).click();}
 		Thread.sleep(500);	
 		driver.findElement(By.xpath("//*[@class='ajax__calendar_day'][contains(text(),'"+day+"')]")).click();
-		ManageMyEntriesPageObjs.saveButton.click();		
+		SEEWindowObjs.saveButton.click();
+		Thread.sleep(2000);
+		driver.switchTo().window(oldWindow);
 	}
 	
-	@Test(enabled=false, priority=4)
-	public void manageMyEntries() throws InterruptedException {
+	@Test(enabled=true, priority=5)
+	public void manageMyEntriesExp() throws InterruptedException {
+			
 		PageFactory.initElements(driver, ManageMyEntriesPageObjs.class);
 		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(8));
-		ManageMyEntriesPageObjs.fingButton.click();
 		Thread.sleep(1000);
-		ManageMyEntriesPageObjs.clientFilter.click();
+		ManageMyEntriesPageObjs.expClientFilter.click();
 		ManageMyEntriesPageObjs.searchField.sendKeys(cliName);
 		Thread.sleep(800);
-		ManageMyEntriesPageObjs.cliSearchResult.click();
-		ManageMyEntriesPageObjs.projectFilter.click();
+		ManageMyEntriesPageObjs.expCliSearchResult.click();
+		ManageMyEntriesPageObjs.expProjectFilter.click();
 		ManageMyEntriesPageObjs.searchField.sendKeys(proName);
 		Thread.sleep(800);
-		ManageMyEntriesPageObjs.proSearchResult.click();
-		ManageMyEntriesPageObjs.activityFilter.click();
-		ManageMyEntriesPageObjs.searchField.sendKeys(activity);
+		ManageMyEntriesPageObjs.expProSearchResult.click();
+		ManageMyEntriesPageObjs.expActivityFilter.click();
+		ManageMyEntriesPageObjs.searchField.sendKeys(expType);
 		Thread.sleep(800);
-		ManageMyEntriesPageObjs.actSearchResult.click();
-		ManageMyEntriesPageObjs.fromDateFilter.clear();
-		ManageMyEntriesPageObjs.fromDateFilter.sendKeys(cpyDate);
-		Thread.sleep(800);
-		ManageMyEntriesPageObjs.toDateFilter.clear();
-		ManageMyEntriesPageObjs.toDateFilter.sendKeys(cpyDate);
-		Thread.sleep(800);
-		ManageMyEntriesPageObjs.searchFilterButton.click();
-		//entry checkbox
-		wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id='tr_0']/following::td/span[contains(text(),'"+cpyDate+"')]/following::td/span[contains(text(),'"+desc+"')]/parent::td/preceding-sibling::td/input")));
-		driver.findElement(By.xpath("//*[@id='tr_0']/following::td/span[contains(text(),'"+cpyDate+"')]/following::td/span[contains(text(),'"+desc+"')]/parent::td/preceding-sibling::td/input")).click();
-		ManageMyEntriesPageObjs.submitButton.click();
-		ManageMyEntriesPageObjs.submittedFilter.click();	
-		//entry inline arrow
-		Thread.sleep(1500);
-		driver.findElement(By.xpath("//*[@id='tr_0']/following::td/span[contains(text(),'"+cpyDate+"')]/following::td/span[contains(text(),'"+desc+"')]/parent::td/following-sibling::td[@class=' details-control pointer']")).click();
-		wait.until(ExpectedConditions.elementToBeClickable(ManageMyEntriesPageObjs.inlineApproveButton));
-		ManageMyEntriesPageObjs.inlineApproveButton.click();
+		ManageMyEntriesPageObjs.expActSearchResult.click();
+		driver.findElement(By.xpath("(//label[text()='Invoice Status'])[2]")).click();
+		try {
+			ManageMyEntriesPageObjs.expFromDateFilter.clear();
+			ManageMyEntriesPageObjs.expFromDateFilter.sendKeys(cpyDate);
+			Thread.sleep(800);
+			ManageMyEntriesPageObjs.expToDateFilter.clear();
+			ManageMyEntriesPageObjs.expToDateFilter.sendKeys(cpyDate+Keys.ESCAPE);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		Thread.sleep(1000);
+		ManageMyEntriesPageObjs.expSearchFilterButton.click();
+		
+		wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id='tr_0']/following::td/span[contains(text(),'"+cpyDate+"')]/following::td/span[contains(text(),'"+descExp+"')]/parent::td/preceding-sibling::td/input")));
+		driver.findElement(By.xpath("//*[@id='tr_0']/following::td/span[contains(text(),'"+cpyDate+"')]/following::td/span[contains(text(),'"+descExp+"')]/parent::td/preceding-sibling::td/input")).click();
+		
+		
+		ManageMyEntriesPageObjs.approveButton.click();
 		String expBannerMsg = "Approved Successfully";
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='messageContent'][contains(text(),'Approved Successfully')]")));
 		String actBannerMsg = driver.findElement(By.xpath("//*[@id='messageContent']")).getText();
-		System.out.println("Time Entry: "+actBannerMsg);
+		System.out.println("Expense Entry: "+actBannerMsg);
 		Assert.assertEquals(actBannerMsg, expBannerMsg);
 	}
 	
-	@Test(enabled=false, priority=5)
+	
+	@Test(enabled=true, priority=6)
 	public void invoice() throws InterruptedException {
 		PageFactory.initElements(driver, HomePageObjs.class);
 		PageFactory.initElements(driver, InvoicePageObjs.class);
@@ -302,14 +353,25 @@ WebDriver driver;
 			InvoicePageObjs.dateCheckbox.click();
 		}
 		else {}
-		String fourtyChars="";
-		if(desc.length()>4) {
-			fourtyChars=desc.substring(0,39);
+		String timeFourtyChars="";
+		if(descTime.length()>39) {
+			timeFourtyChars=descTime.substring(0,39);
 		}
 		else {
-			fourtyChars=desc;
+			timeFourtyChars=descTime;
 		}
-		driver.findElement(By.xpath("//*[@align='left'][contains(text(),'Time')]/following::span[contains(text(),'"+activity+"')]/following::span[contains(text(),'"+fourtyChars+"')]/parent::span/parent::div/parent::td/preceding-sibling::td/span/input")).click();
+		String expFourtyChars="";
+		if(descExp.length()>39) {
+			expFourtyChars=descExp.substring(0,39);
+		}
+		else {
+			expFourtyChars=descExp;
+		}
+		
+		//selecting time entry checkbox
+		driver.findElement(By.xpath("//*[@align='left'][contains(text(),'Time')]/following-sibling::td/descendant::span[contains(text(),'"+activity+"')]/ancestor::td/following-sibling::td/descendant::span[contains(text(),'"+timeFourtyChars+"')]/parent::span/parent::div/parent::td/preceding-sibling::td/span/input")).click();
+		//selecting expense entry checkbox
+		driver.findElement(By.xpath("//*[@align='left'][contains(text(),'Expense')]/following-sibling::td/descendant::span[contains(text(),'"+expType+"')]/ancestor::td/following-sibling::td/descendant::span[contains(text(),'"+expFourtyChars+"')]/parent::span/parent::div/parent::td/preceding-sibling::td/span/input")).click();		
 		InvoicePageObjs.savePreBill.click();
 	}
 		

@@ -13,7 +13,7 @@ public class HomePageObjs {
 	@FindBy(xpath="//*[@id='entries-home']/li[4]/a")
 	public static WebElement manageTeamEntriesButton;
 	
-	@FindBy(xpath="//*[@id=\"billing-home\"]/li[2]/a")
+	@FindBy(xpath="//*[@id='billing-home']/li[2]/a")
 	public static WebElement invoiceButton;
 	
 
