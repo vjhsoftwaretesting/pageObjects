@@ -50,7 +50,7 @@
               <ul>
                 <li>
                   <a href="#" panel-name="test-xml-Suite" class="navigator-link ">
-                    <span>C:\Users\vjhhp\eclipse-workspace\pageObjects\testSuits\GetAllServers.xml</span>
+                    <span>C:\Users\vjhhp\eclipse-workspace\pageObjects\testSuits\Smoke1_AllPageLoad.xml</span>
                   </a> <!-- navigator-link  -->
                 </li>
                 <li>
@@ -103,7 +103,7 @@
                     <div class="method-list-content passed suite-Suite">
                       <span>
                         <img src="passed.png" width="3%"/>
-                        <a href="#" panel-name="suite-Suite" title="testcases.GetServer" class="method navigator-link" hash-for-method="noLogin">noLogin</a> <!-- method navigator-link -->
+                        <a href="#" panel-name="suite-Suite" title="testcases.AllPagesLoading" class="method navigator-link" hash-for-method="Login">Login</a> <!-- method navigator-link -->
                       </span>
                       <br/>
                     </div> <!-- method-list-content passed suite-Suite -->
@@ -121,14 +121,14 @@
           <div class="suite-Suite-class-passed">
             <div class="main-panel-header rounded-window-top">
               <img src="passed.png"/>
-              <span class="class-name">testcases.GetServer</span>
+              <span class="class-name">testcases.AllPagesLoading</span>
             </div> <!-- main-panel-header rounded-window-top -->
             <div class="main-panel-content rounded-window-bottom">
               <div class="method">
                 <div class="method-content">
-                  <a name="noLogin">
-                  </a> <!-- noLogin -->
-                  <span class="method-name">noLogin</span>
+                  <a name="Login">
+                  </a> <!-- Login -->
+                  <span class="method-name">Login</span>
                 </div> <!-- method-content -->
               </div> <!-- method -->
             </div> <!-- main-panel-content rounded-window-bottom -->
@@ -136,7 +136,7 @@
         </div> <!-- panel Suite -->
         <div panel-name="test-xml-Suite" class="panel">
           <div class="main-panel-header rounded-window-top">
-            <span class="header-content">C:\Users\vjhhp\eclipse-workspace\pageObjects\testSuits\GetAllServers.xml</span>
+            <span class="header-content">C:\Users\vjhhp\eclipse-workspace\pageObjects\testSuits\Smoke1_AllPageLoad.xml</span>
           </div> <!-- main-panel-header rounded-window-top -->
           <div class="main-panel-content rounded-window-bottom">
             <pre>
@@ -144,9 +144,8 @@
 &lt;!DOCTYPE suite SYSTEM &quot;https://testng.org/testng-1.0.dtd&quot;&gt;
 &lt;suite name=&quot;Suite&quot; guice-stage=&quot;DEVELOPMENT&quot; verbose=&quot;5&quot;&gt;
   &lt;test thread-count=&quot;5&quot; name=&quot;Test1&quot; verbose=&quot;5&quot;&gt;
-    &lt;parameter name=&quot;myName&quot; value=&quot;Server 9V&quot;/&gt;
     &lt;classes&gt;
-      &lt;class name=&quot;testcases.GetServer&quot;/&gt;
+      &lt;class name=&quot;testcases.AllPagesLoading&quot;/&gt;
     &lt;/classes&gt;
   &lt;/test&gt; &lt;!-- Test1 --&gt;
 &lt;/suite&gt; &lt;!-- Suite --&gt;
@@ -188,14 +187,14 @@ data.addColumn('string', 'Class');
 data.addColumn('number', 'Time (ms)');
 data.addRows(1);
 data.setCell(0, 0, 0)
-data.setCell(0, 1, 'noLogin')
-data.setCell(0, 2, 'testcases.GetServer')
-data.setCell(0, 3, 399134);
+data.setCell(0, 1, 'Login')
+data.setCell(0, 2, 'testcases.AllPagesLoading')
+data.setCell(0, 3, 104560);
 window.suiteTableData['Suite']= { tableData: data, tableDiv: 'times-div-Suite'}
 return data;
 }
               </script>
-              <span class="suite-total-time">Total running time: 6 minutes</span>
+              <span class="suite-total-time">Total running time: 1 minutes</span>
               <div id="times-div-Suite">
               </div> <!-- times-div-Suite -->
             </div> <!-- times-div -->
@@ -221,10 +220,14 @@ return data;
           </div> <!-- main-panel-header rounded-window-top -->
           <div class="main-panel-content rounded-window-bottom">
             <div class="chronological-class">
-              <div class="chronological-class-name">testcases.GetServer</div> <!-- chronological-class-name -->
-              <div class="test-method">
+              <div class="chronological-class-name">testcases.AllPagesLoading</div> <!-- chronological-class-name -->
+              <div class="configuration-test before">
                 <span class="method-name">noLogin</span>
                 <span class="method-start">0 ms</span>
+              </div> <!-- configuration-test before -->
+              <div class="test-method">
+                <span class="method-name">Login</span>
+                <span class="method-start">30908 ms</span>
               </div> <!-- test-method -->
           </div> <!-- main-panel-content rounded-window-bottom -->
         </div> <!-- panel -->

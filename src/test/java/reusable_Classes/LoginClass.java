@@ -1,6 +1,7 @@
 package reusable_Classes;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
 
@@ -31,8 +32,13 @@ public class LoginClass {
 		LoginPageObjs.password.sendKeys(pword);
 		LoginPageObjs.submitButton.click();
 		Thread.sleep(2000);
-		driver.findElement(By.xpath("(//button[text()='Close'])[2]")).click();
-		Thread.sleep(2000);
+		try {
+			driver.findElement(By.xpath("(//button[text()='Close'])[2]")).click();
+			Thread.sleep(2000);
+		} catch (NoSuchElementException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }
